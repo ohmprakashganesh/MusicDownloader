@@ -17,4 +17,5 @@ public class Music {
     private String title;
     private String artist;
     private String filePath;
+    private String externalUrl = "";
 }

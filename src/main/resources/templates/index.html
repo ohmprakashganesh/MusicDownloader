@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Music Downloader</title>
+</head>
+<body>
+<h1>🎵 Music Downloader</h1>
+
+<form th:action="@{/upload}" method="post" enctype="multipart/form-data">
+    <input type="text" name="title" placeholder="Title" required />
+    <input type="text" name="artist" placeholder="Artist" required />
+    <input type="file" name="file" accept="audio/*" required />
+    <input type="url" name="externalUrl" placeholder="YouTube/SoundCloud Embed URL (optional)"/>
+    <button type="submit">Upload</button>
+</form>
+
+<form th:action="@{/}" method="get">
+    <input type="text" name="keyword" placeholder="Search title..."/>
+    <button type="submit">Search</button>
+</form>
+
+<hr/>
+<ul>
+    <!-- Sample Song with external YouTube embed -->
+    <li>
+        <strong>Relaxing Piano</strong> - <em>Peace Studio</em><br/>
+        <div>
+            <iframe width="300" height="150" src="https://www.youtube.com/embed/2OEL4P1Rz04" allow="autoplay"></iframe>
+        </div>
+    </li>
+
+    <!-- Loop through dynamic songs -->
+    <li th:each="song : ${songs}">
+        <strong th:text="${song.title}">Title</strong> -
+        <em th:text="${song.artist}">Artist</em>
+        <br/>
+        <div th:if="${not #strings.isEmpty(song.externalUrl)}">
+            <iframe width="300" height="150" th:src="${song.externalUrl}" allow="autoplay"></iframe>
+        </div>
+        <div th:unless="${not #strings.isEmpty(song.externalUrl)}">
+            <audio controls>
+                <source th:src="@{${song.filePath}}" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+            <a th:href="@{'/download/' + ${#strings.substring(song.filePath, 7)}}">Download</a>
+        </div>
+    </li>
+</ul>
+
+<h3>🎬 Sample YouTube Embed</h3>
+<iframe width="300" height="200" src="https://www.youtube.com/embed/tgbNymZ7vqY"></iframe>
+</body>
+</html>
